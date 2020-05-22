@@ -64,7 +64,6 @@
   },
   "np": {
     "yarn": false,
-    "yolo": true,
-    "releaseDraft": false
+    "yolo": true
   }
 }

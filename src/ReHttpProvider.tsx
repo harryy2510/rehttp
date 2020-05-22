@@ -7,13 +7,13 @@ export interface ReHttpProviderProps {
   params?: Record<string, string | number | Array<string | number>>
   headers?: Record<string, string>
 
-  onError?: (error: any) => Promise<void>
-  onResponse?: (data: any) => Promise<void>
   onRequest?: (data: ReRequest) => Promise<void>
+  onResponse?: (data: any, response: Response) => Promise<void>
+  onError?: (error: any) => Promise<void>
+  onComplete?: (dataOrError: any, response?: Response) => Promise<void>
   transformError?: (data: any) => Promise<any>
   transformResponse?: (data: any, response: Response) => Promise<any>
   transformRequest?: (data: ReRequest) => Promise<ReRequest>
-
   lazy?: boolean
 }
 

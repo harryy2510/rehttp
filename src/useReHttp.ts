@@ -16,16 +16,13 @@ export interface ReHttpReturn<TResponse = any, TError = any> {
   loading: boolean
   error: TError | null
   execute: (input?: Partial<ReRequest>) => Promise<TResponse | TError>
+  isRequestInFlight: boolean
 }
 
 export interface ReHttpProps<TResponse = any, TError = any> {
-  onError?: (error: any) => Promise<void>
-  onResponse?: (data: any) => Promise<void>
-  onRequest?: (data: ReRequest) => Promise<void>
   transformError?: (data: any) => Promise<TError>
   transformResponse?: (data: any, response: Response) => Promise<TResponse>
   transformRequest?: (data: ReRequest) => Promise<ReRequest>
-
   lazy?: boolean
 }
 
@@ -62,10 +59,12 @@ const useReHttp = <TResponse = any, TError = any>(
     loading: !lazy,
     error: null,
     data: null,
-    response: null
+    response: null,
+    isRequestInFlight: !lazy
   })
   const execute: ReHttpReturn<TResponse, TError>['execute'] = async executeInput => {
-    !response.loading && setResponse(res => ({ ...res, loading: true }))
+    !response.isRequestInFlight &&
+      setResponse(res => ({ ...res, loading: !(res.data || res.error), isRequestInFlight: true }))
     let reRequest = getReRequest(contextValues, input, executeInput)
     if (contextValues.transformRequest) {
       reRequest = await contextValues.transformRequest(reRequest)
@@ -84,14 +83,17 @@ const useReHttp = <TResponse = any, TError = any>(
       if (contextValues.transformResponse) {
         data = await contextValues.transformResponse(data, res)
       }
-      await contextValues?.onResponse?.(data)
+      await contextValues?.onResponse?.(data, res)
+      await contextValues?.onComplete?.(data, res)
       if (options?.transformResponse) {
         data = await options.transformResponse(data, res)
       }
-      setResponse({ data, response: res, error: null, loading: false })
+      setResponse({ data, response: res, error: null, loading: false, isRequestInFlight: false })
       return data
     } catch (error) {
-      setResponse({ data: null, response: null, error, loading: false })
+      await contextValues?.onError?.(error)
+      await contextValues?.onComplete?.(error)
+      setResponse({ data: null, response: null, error, loading: false, isRequestInFlight: false })
       return error
     }
   }
