@@ -63,7 +63,7 @@ const Example: React.FC = () => {
 
 ## API
 
-### `const {data, response, error, loading, execute, isRequestInFlight} = useReHttp(request, options?)`
+##### `const {data, response, error, loading, execute, isRequestInFlight} = useReHttp(request, options?)`
 
 By default, request will be fired if `lazy: true` is not passed as an option.
 
@@ -139,9 +139,9 @@ useReHttp<Post, PostError>({
 ```
 
 
-#### Need to set options globally? No problem!
+##### Need to set options globally? No problem!
 
-### `ReHttpProvider`
+#### `ReHttpProvider`
 
 ```tsx
 import React from 'react'
