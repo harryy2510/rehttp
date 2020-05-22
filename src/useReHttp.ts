@@ -1,12 +1,12 @@
-import urlJoin, { Options } from 'proper-url-join'
 import React from 'react'
 import { ReHttpProviderProps, useReHttpContext } from './ReHttpProvider'
+import { urlJoin } from './utils'
 
 export interface ReRequest {
   method: 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
   url: string
   headers: Record<string, string>
-  params: Options['query']
+  params: Record<string, string | number | Array<string | number>>
   body: any
 }
 
@@ -39,7 +39,7 @@ const getReRequest = (
     ...(input.params || {}),
     ...(executeInput?.params || {})
   }
-  const url = urlJoin(contextValues.baseUrl, executeInput?.url || input.url, { query: params })
+  const url = urlJoin(contextValues.baseUrl, executeInput?.url || input.url, params)
   const headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',

@@ -24,14 +24,13 @@
     "test:watch": "react-scripts test --env=jsdom",
     "predeploy": "cd example && npm install && npm run build",
     "deploy": "gh-pages -d example/build",
-    "release": "np --yolo --no-yarn --no-release-draft"
+    "release": "np"
   },
   "peerDependencies": {
     "react": "^16.13.1"
   },
   "devDependencies": {
     "@types/jest": "^25.2.3",
-    "@types/proper-url-join": "^2.0.0",
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
     "@typescript-eslint/eslint-plugin": "^3.0.0",
@@ -60,7 +59,12 @@
   "files": [
     "dist"
   ],
-  "dependencies": {
-    "proper-url-join": "^2.1.1"
+  "publishConfig": {
+    "access": "public"
+  },
+  "np": {
+    "yarn": false,
+    "yolo": true,
+    "releaseDraft": false
   }
 }

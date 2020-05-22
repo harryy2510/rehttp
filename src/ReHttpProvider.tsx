@@ -1,11 +1,10 @@
-import { Options } from 'proper-url-join'
 import React from 'react'
 import { ReRequest } from './useReHttp'
 
 export interface ReHttpProviderProps {
   baseUrl?: string
   method?: 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
-  params?: Options['query']
+  params?: Record<string, string | number | Array<string | number>>
   headers?: Record<string, string>
 
   onError?: (error: any) => Promise<void>
