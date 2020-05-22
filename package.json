@@ -4,7 +4,7 @@
   "description": "Highly customizable http client library for react",
   "author": "harry2510",
   "license": "MIT",
-  "repository": "harry2510/rehttp",
+  "repository": "harryy2510/rehttp",
   "main": "dist/index.js",
   "umd:main": "dist/index.umd.js",
   "module": "dist/index.modern.js",
