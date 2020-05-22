@@ -5,17 +5,17 @@ const stringify = (params: Record<string, string | number | Array<string | numbe
     })
     .join('&')
 const removeSlash = (e: string) => e.replace(/\/+/g, '/').replace(/\/+$/, '')
-export const urlJoin = (...args: any) => {
-  const params = args.find((e: any) => typeof e === 'object' && e)
-  let url: string = args
-    .filter((e: any) => typeof e === 'string' && e)
-    .map(removeSlash)
-    .join('/')
+export const urlJoin = (
+  _baseUrl?: string,
+  _url?: string,
+  _params?: Record<string, string | number | Array<string | number>>
+) => {
+  let url = (!_url?.startsWith('http') ? removeSlash(_baseUrl || '') : '') + '/' + removeSlash(_url || '')
   if (!url.startsWith('http') && !url.startsWith('/')) {
     url = `/${url}`
   }
-  if (params && Object.keys(params).length) {
-    url += `?${stringify(params)}`
+  if (_params && Object.keys(_params).length) {
+    url += `?${stringify(_params)}`
   }
   return url
 }
