@@ -1,5 +1,5 @@
 {
-  "name": "rehttp",
+  "name": "@harryy/rehttp",
   "version": "1.0.0",
   "description": "Highly customizable http client library for react",
   "author": "harry2510",
@@ -16,20 +16,22 @@
   "scripts": {
     "build": "microbundle-crl --no-sourcemap",
     "start": "microbundle-crl watch --no-compress",
-    "prepublish": "run-s build",
+    "prepublishOnly": "run-s build",
     "test": "run-s test:unit test:lint test:build",
     "test:build": "run-s build",
     "test:lint": "eslint .",
     "test:unit": "cross-env CI=1 react-scripts test --env=jsdom",
     "test:watch": "react-scripts test --env=jsdom",
     "predeploy": "cd example && npm install && npm run build",
-    "deploy": "gh-pages -d example/build"
+    "deploy": "gh-pages -d example/build",
+    "release": "np"
   },
   "peerDependencies": {
     "react": "^16.13.1"
   },
   "devDependencies": {
     "@types/jest": "^25.2.3",
+    "@types/proper-url-join": "^2.0.0",
     "@types/react": "^16.9.35",
     "@types/react-dom": "^16.9.8",
     "@typescript-eslint/eslint-plugin": "^3.0.0",
@@ -48,12 +50,12 @@
     "eslint-plugin-standard": "^4.0.1",
     "gh-pages": "^2.2.0",
     "microbundle-crl": "^0.13.10",
+    "np": "^6.2.3",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.0.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "^3.4.1",
-    "@types/proper-url-join": "^2.0.0"
+    "react-scripts": "^3.4.1"
   },
   "files": [
     "dist"
