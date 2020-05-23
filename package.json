@@ -1,6 +1,6 @@
 {
   "name": "@harryy/rehttp",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Highly customizable http client library for react",
   "author": "harry2510",
   "license": "MIT",

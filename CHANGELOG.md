@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/harryy2510/rehttp/compare/v1.1.1...v1.2.0) (2020-05-23)
+
+
+### Features
+
+* use it outside react context ([ebe394f](https://github.com/harryy2510/rehttp/commit/ebe394ffecbe38a2ffccff717729c81e8c3372e9))
+
 ## [1.1.1](https://github.com/harryy2510/rehttp/compare/v1.1.0...v1.1.1) (2020-05-23)
 
 
