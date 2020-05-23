@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/harryy2510/rehttp/compare/v1.1.0...v1.1.1) (2020-05-23)
+
+
+### Bug Fixes
+
+* removed umd modules ([1f57a73](https://github.com/harryy2510/rehttp/commit/1f57a735e75b4af3a2618ab082a1718e3968a44f))
+
 # [1.1.0](https://github.com/harryy2510/rehttp/compare/v1.0.6...v1.1.0) (2020-05-23)
 
 
