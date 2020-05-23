@@ -21,8 +21,8 @@
 - [x] Transforming request and response
 - [x] Callbacks for request, response and error
 - [x] Caching
-- [ ] Use outside of react context
-- [ ] HOC & Component (for class based component)
+- [x] Use outside of react context
+- [x] Component (for class based component)
 
 ## Installation
 
@@ -142,6 +142,80 @@ useReHttp<Post, PostError>({
 ```
 
 
+##### Need to use in class component? No Problem!
+
+```tsx
+import React from 'react'
+import { ReHttp, ReHttpProps } from 'rehttp'
+
+interface Post {
+  id: string,
+  title: string,
+}
+interface PostError {
+  message: string,
+  status: 'NOTOK',
+}
+
+class MyComponent extends React.Component {
+    reHttpProps: Omit<ReHttpProps<Post, PostError>, 'children'> = {
+        method: 'GET', // Optional, type: 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT', default: 'GET'
+        url: 'https://jsonplaceholder.typicode.com/posts', // Optional, type: string, default: ''
+        headers: {
+          Accept: 'application/json'
+        }, // Optional, type: Record<string, string>, default: { Accept: 'application/json', 'Content-Type': 'application/json' }
+        params: {
+          page: 1,
+          per_page: 5,
+          tags: ['hello', 'world']
+        },  // Optional, type: Record<string, string | number | Array<string | number>>, default: undefined
+        body: undefined, // Optional, type: any, default: undefined
+        transformError: async (e) => {
+        return {
+          status: 'NOTOK',
+          message: e.message
+        }
+        }, // Optional, type: (data: any) => Promise<PostError>, default: undefined
+        transformResponse: async (data: any, response: ReHttpResponse) => {
+          if (data.id && response.status === 200) {
+            return {
+              id: data.id,
+              title: data.title.toUpperCase()
+            }
+          } else {
+            return Promise.reject(new Error('Post has no id'))
+          }
+        }, // Optional, type: (data: any, response: ReHttpResponse) => Promise<Post>, default: undefined
+        transformRequest: async (res: ReHttpRequest) => {
+        const token = await SomeAsyncStorageOrApiOrWhatever().token
+        return {
+          ...res,
+          params: {
+            foo: 'bar',
+          },
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+        }, // Optional, type: (data: ReHttpRequest) => Promise<ReHttpRequest>, default: undefined
+        lazy: true, // Optional, type: boolean, default: false
+        noCache: true, // Optional, type: boolean, default: false
+    }
+    render() {
+        <ReHttp<Post, PostError> {...this.reHttpProps}>
+          {
+            ({data, refetch}) => (
+              <>
+                {data.title}
+                <button onClick={() => refetch()}>Refetch</button>
+              </>
+          )
+        </ReHttp>
+    }
+}
+```
+
+
 ##### Need to set options globally? No problem!
 
 #### `ReHttpProvider`
@@ -205,6 +279,26 @@ const App: React.FC = () => {
             <Main />
         </ReHttpProvider>
     )
+}
+```
+
+##### Need to use it outside of react context (like redux thunk etc.) and still use context values? No Problem!
+
+#### `reHttpInstance`
+
+```tsx
+import React from 'react'
+
+import { reHttpInstance } from 'rehttp'
+
+reHttpInstance({
+  url: 'https://jsonplaceholder.typicode.com'
+}).then(res => {
+  console.log('Response from ReHttp', res)
+}) // option lazy: true will have no effect here
+
+const MyComponent: React.FC = () => {
+    return <div>Hello World!</div>
 }
 ```
 
