@@ -1,3 +1,5 @@
+## [1.2.1](https://github.com/harryy2510/rehttp/compare/v1.2.0...v1.2.1) (2020-05-23)
+
 # [1.2.0](https://github.com/harryy2510/rehttp/compare/v1.1.1...v1.2.0) (2020-05-23)
 
 
