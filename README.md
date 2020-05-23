@@ -2,11 +2,11 @@
 > A highly customizable http client library for react
 
 
-[![npm (scoped)](https://img.shields.io/npm/v/@harryy/rehttp)](https://npmjs.com/package/@harryy/rehttp)
+[![npm (scoped)](https://badgen.net/npm/v/@harryy/rehttp)](https://npmjs.com/package/@harryy/rehttp)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-![GitHub](https://img.shields.io/github/license/harryy2510/rehttp)
-![npm bundle size (scoped)](https://img.shields.io/bundlephobia/minzip/@harryy/rehttp)
-![npm bundle size (scoped)](https://img.shields.io/bundlephobia/min/@harryy/rehttp)
+![GitHub](https://badgen.net/github/license/harryy2510/rehttp)
+![npm bundle size (scoped)](https://badgen.net/bundlephobia/minzip/@harryy/rehttp)
+![npm bundle size (scoped)](https://badgen.net/bundlephobia/min/@harryy/rehttp)
 ![GitHub top language](https://img.shields.io/github/languages/top/harryy2510/rehttp)
 ![David](https://img.shields.io/david/harryy2510/rehttp)
 
