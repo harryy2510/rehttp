@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/harryy2510/rehttp/compare/v1.0.6...v1.1.0) (2020-05-23)
+
+
+### Features
+
+* caching added ([0741521](https://github.com/harryy2510/rehttp/commit/07415210fcf1a7bac2e13ff9522bee064c63c6fa))
+
 ## [1.0.6](https://github.com/harryy2510/rehttp/compare/v1.0.5...v1.0.6) (2020-05-22)
 
 
