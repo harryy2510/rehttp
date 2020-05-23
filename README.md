@@ -1,4 +1,4 @@
-# React + HTTP = ReHTTP
+# React + HTTP = ReHttp
 > A highly customizable http client library for react
 
 
@@ -20,7 +20,7 @@
 - [x] Lazy fetch support
 - [x] Transforming request and response
 - [x] Callbacks for request, response and error
-- [ ] Caching
+- [x] Caching
 - [ ] Use outside of react context
 - [ ] HOC & Component (for class based component)
 
@@ -63,7 +63,7 @@ const Example: React.FC = () => {
 
 ## API
 
-##### `const {data, response, error, loading, execute, isRequestInFlight} = useReHttp(request, options?)`
+##### `const {data, response, error, loading, execute, isRequestInFlight, cached} = useReHttp(request, options?)`
 
 By default, request will be fired if `lazy: true` is not passed as an option.
 
@@ -79,10 +79,12 @@ By default, request will be fired if `lazy: true` is not passed as an option.
 
 `execute` can be called with optional `request` parameters to refetch data again
 
+`cached` gives the cached object if the request was cached earlier
+
 
 ```tsx
 import React from 'react'
-import { useReHttp, ReRequest } from 'rehttp'
+import { useReHttp, ReHttpRequest, ReHttpResponse } from 'rehttp'
 
 interface Post {
   id: string,
@@ -112,7 +114,7 @@ useReHttp<Post, PostError>({
       message: e.message
     }
   }, // Optional, type: (data: any) => Promise<PostError>, default: undefined
-  transformResponse: async (data: any, response: Response) => {
+  transformResponse: async (data: any, response: ReHttpResponse) => {
       if (data.id && response.status === 200) {
         return {
           id: data.id,
@@ -121,8 +123,8 @@ useReHttp<Post, PostError>({
       } else {
         return Promise.reject(new Error('Post has no id'))
       }
-  }, // Optional, type: (data: any, response: Response) => Promise<Post>, default: undefined
-  transformRequest: async (res: ReRequest) => {
+  }, // Optional, type: (data: any, response: ReHttpResponse) => Promise<Post>, default: undefined
+  transformRequest: async (res: ReHttpRequest) => {
     const token = await SomeAsyncStorageOrApiOrWhatever().token
     return {
       ...res,
@@ -133,8 +135,9 @@ useReHttp<Post, PostError>({
         Authorization: `Bearer ${token}`
       }
     }
-  }, // Optional, type: (data: ReRequest) => Promise<ReRequest>, default: undefined
+  }, // Optional, type: (data: ReHttpRequest) => Promise<ReHttpRequest>, default: undefined
   lazy: true, // Optional, type: boolean, default: false
+  noCache: true, // Optional, type: boolean, default: false
 });
 ```
 
@@ -146,33 +149,34 @@ useReHttp<Post, PostError>({
 ```tsx
 import React from 'react'
 
-import { ReHttpProvider, ReHttpProviderProps } from 'rehttp'
+import { ReHttpProvider, ReHttpProviderProps, ReHttpRequest, ReHttpResponse, InMemoryAdapter } from 'rehttp'
 
 const App: React.FC = () => {
     const options: ReHttpProviderProps = {
+        cacheAdapter: new InMemoryAdapter({ttl: 5 * 60 * 1000, size: 50}),  // Optional, type: CacheAdapter, params: {ttl?: 5 * 60* 1000, size?: 50}?, ttl is in milliseconds
         baseUrl: 'https://jsonplaceholder.typicode.com', // Optional, type: string
         method: 'GET', // Optional, type: 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
         params: {}, // Optional, type: Record<string, string | number | Array<string | number>>
         headers: {}, // Optional, type: Record<string, string>
         onRequest: () => {
             showLoader()
-        }, //Optional, type: (data: ReRequest) => Promise<void>
+        }, //Optional, type: (data: ReHttpRequest) => Promise<void>
         onResponse: () => {
             showSuccess('request success')
-        }, //Optional, type: (data: any, response: Response) => Promise<void>
+        }, //Optional, type: (data: any, response: ReHttpResponse) => Promise<void>
         onError: (error) => {
             showAlert(error.message)
         }, // Optional, type: (error: any) => Promise<void>
         onComplete: (dataOrError, response) => {
             hideLoader()
-        }, // Optional, type: (dataOrError: any, response?: Response) => Promise<void>
+        }, // Optional, type: (dataOrError: any, response?: ReHttpResponse) => Promise<void>
         transformError: async (e) => {
             return {
                 status: 'NOTOK',
                 message: e.message
             }
         }, // Optional, type: (data: any) => Promise<PostError>, default: undefined
-        transformResponse: async (data: any, response: Response) => {
+        transformResponse: async (data: any, response: ReHttpResponse) => {
             if (data.id && response.status === 200) {
                 return {
                     id: data.id,
@@ -181,8 +185,8 @@ const App: React.FC = () => {
             } else {
                 return Promise.reject(new Error('Post has no id'))
             }
-        }, // Optional, type: (data: any, response: Response) => Promise<Post>, default: undefined
-        transformRequest: async (res: ReRequest) => {
+        }, // Optional, type: (data: any, response: ReHttpResponse) => Promise<Post>, default: undefined
+        transformRequest: async (res: ReHttpRequest) => {
             const token = await SomeAsyncStorageOrApiOrWhatever().token
             return {
                 ...res,
@@ -193,7 +197,7 @@ const App: React.FC = () => {
                     Authorization: `Bearer ${token}`
                 }
             }
-        }, // Optional, type: (data: ReRequest) => Promise<ReRequest>, default: undefined
+        }, // Optional, type: (data: ReHttpRequest) => Promise<ReHttpRequest>, default: undefined
         lazy: true, // Optional, type: boolean
     }
     return (

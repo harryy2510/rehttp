@@ -1,8 +1,16 @@
 import React from 'react'
-import { ReHttpProviderProps, useReHttpContext } from './ReHttpProvider'
-import { urlJoin } from './utils'
+import { CacheAdapter, ReHttpProviderProps, useReHttpContext } from './ReHttpProvider'
+import { generateResponse, urlJoin } from './utils'
 
-export interface ReRequest {
+export interface CacheObject<TData = any> {
+  accessCount: number
+  lastAccessedAt: string | null
+  createdAt: string
+  updatedAt: string | null
+  response: ReHttpResponse<TData>
+}
+
+export interface ReHttpRequest {
   method: 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
   url: string
   headers: Record<string, string>
@@ -10,27 +18,34 @@ export interface ReRequest {
   body: any
 }
 
-export interface ReHttpReturn<TResponse = any, TError = any> {
-  response: Response | null
-  data: TResponse | null
+export interface ReHttpResponse<TData = any>
+  extends Pick<Response, 'headers' | 'ok' | 'redirected' | 'status' | 'statusText' | 'type' | 'url'> {
+  data: TData
+}
+
+export interface ReHttpReturn<TData = any, TError = any> {
+  response: ReHttpResponse<TData> | null
+  data: TData | null
   loading: boolean
   error: TError | null
-  execute: (input?: Partial<ReRequest>) => Promise<TResponse | TError>
+  execute: (input?: Partial<ReHttpRequest>) => Promise<TData | TError>
   isRequestInFlight: boolean
+  cached: CacheObject<TData> | null
 }
 
-export interface ReHttpProps<TResponse = any, TError = any> {
+export interface ReHttpProps<TData = any, TError = any> {
   transformError?: (data: any) => Promise<TError>
-  transformResponse?: (data: any, response: Response) => Promise<TResponse>
-  transformRequest?: (data: ReRequest) => Promise<ReRequest>
+  transformResponse?: (data: any, response: ReHttpResponse) => Promise<TData>
+  transformRequest?: (data: ReHttpRequest) => Promise<ReHttpRequest>
   lazy?: boolean
+  noCache?: boolean
 }
 
-const getReRequest = (
+const getReHttpRequest = (
   contextValues: ReHttpProviderProps,
-  input: Partial<ReRequest>,
-  executeInput?: Partial<ReRequest>
-): ReRequest => {
+  input: Partial<ReHttpRequest>,
+  executeInput?: Partial<ReHttpRequest>
+): ReHttpRequest => {
   const params = {
     ...(contextValues.params || {}),
     ...(input.params || {}),
@@ -49,23 +64,49 @@ const getReRequest = (
   return { params, url, headers, body, method }
 }
 
-const useReHttp = <TResponse = any, TError = any>(
-  input: Partial<ReRequest>,
-  options?: ReHttpProps<TResponse, TError>
-): ReHttpReturn<TResponse> => {
+const fetchOrCache = async <TData = any>(
+  reRequest: ReHttpRequest,
+  cacheAdapter?: CacheAdapter<TData>,
+  noCache?: boolean
+) => {
+  let data: TData
+  let httpResponse: ReHttpResponse<TData>
+  let cached: CacheObject<TData> | null = null
+  if (!noCache && (await cacheAdapter?.has(reRequest.url))) {
+    cached = (await cacheAdapter?.get(reRequest.url))!
+    httpResponse = cached.response
+    data = httpResponse.data
+  } else {
+    const fetchResponse = await fetch(reRequest.url, {
+      body: reRequest.body,
+      headers: reRequest.headers,
+      method: reRequest.method
+    })
+    data = await fetchResponse.json()
+    httpResponse = generateResponse<TData>(fetchResponse, data)
+    await cacheAdapter?.set(reRequest.url, httpResponse)
+  }
+  return { data, httpResponse, cached }
+}
+
+const useReHttp = <TData = any, TError = any>(
+  input: Partial<ReHttpRequest>,
+  options?: ReHttpProps<TData, TError>
+): ReHttpReturn<TData> => {
   const contextValues = useReHttpContext()
   const lazy = Boolean(options?.lazy ?? contextValues.lazy)
-  const [response, setResponse] = React.useState<Omit<ReHttpReturn<TResponse, TError>, 'execute'>>({
+  const [response, setResponse] = React.useState<Omit<ReHttpReturn<TData, TError>, 'execute'>>({
     loading: !lazy,
     error: null,
     data: null,
     response: null,
-    isRequestInFlight: !lazy
+    isRequestInFlight: !lazy,
+    cached: null
   })
-  const execute: ReHttpReturn<TResponse, TError>['execute'] = async executeInput => {
+  const execute: ReHttpReturn<TData, TError>['execute'] = async executeInput => {
     !response.isRequestInFlight &&
       setResponse(res => ({ ...res, loading: !(res.data || res.error), isRequestInFlight: true }))
-    let reRequest = getReRequest(contextValues, input, executeInput)
+    let reRequest = getReHttpRequest(contextValues, input, executeInput)
     if (contextValues.transformRequest) {
       reRequest = await contextValues.transformRequest(reRequest)
     }
@@ -74,26 +115,26 @@ const useReHttp = <TResponse = any, TError = any>(
     }
     await contextValues?.onRequest?.(reRequest)
     try {
-      const res = await fetch(reRequest.url, {
-        body: reRequest.body,
-        headers: reRequest.headers,
-        method: reRequest.method
-      })
-      let data: TResponse = await res.json()
+      let { data, httpResponse, cached } = await fetchOrCache<TData>(
+        reRequest,
+        contextValues.cacheAdapter,
+        options?.noCache
+      )
       if (contextValues.transformResponse) {
-        data = await contextValues.transformResponse(data, res)
+        data = await contextValues.transformResponse(data, httpResponse)
+        httpResponse.data = data
       }
-      await contextValues?.onResponse?.(data, res)
-      await contextValues?.onComplete?.(data, res)
+      await contextValues?.onResponse?.(data, httpResponse)
+      await contextValues?.onComplete?.(data, httpResponse)
       if (options?.transformResponse) {
-        data = await options.transformResponse(data, res)
+        data = await options.transformResponse(data, httpResponse)
       }
-      setResponse({ data, response: res, error: null, loading: false, isRequestInFlight: false })
+      setResponse({ data, response: httpResponse, cached, error: null, loading: false, isRequestInFlight: false })
       return data
     } catch (error) {
       await contextValues?.onError?.(error)
       await contextValues?.onComplete?.(error)
-      setResponse({ data: null, response: null, error, loading: false, isRequestInFlight: false })
+      setResponse({ data: null, response: null, error, loading: false, isRequestInFlight: false, cached: null })
       return error
     }
   }

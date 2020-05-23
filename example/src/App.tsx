@@ -1,22 +1,18 @@
 import React from 'react'
-import { useReHttp } from 'rehttp'
-const App = () => {
-  const res = useReHttp(
-    {
-      url: 'https://gorest.co.in/public-api/users?_format=json&access-token=G1KYY_HKk953GDfpzWh68Gtn2g7qvRH_uWoA'
-    },
-    {
-      transformResponse: async (data, response) => {
-        console.log(data, response)
-        if (data) {
-          return Promise.reject('sdad')
-        }
-        return data
-      }
-    }
-  )
+import { useReHttp, ReHttpProvider } from 'rehttp'
+const Component = () => {
+  const res = useReHttp({
+    url: 'https://gorest.co.in/public-api/users?_format=json&access-token=RWyK6NPI2irjKOF3HigQxn04nPnK6wJwJcul'
+  })
   console.log(res)
   return <button onClick={() => res.execute()}>fetch</button>
+}
+const App = () => {
+  return (
+    <ReHttpProvider>
+      <Component />
+    </ReHttpProvider>
+  )
 }
 
 export default App

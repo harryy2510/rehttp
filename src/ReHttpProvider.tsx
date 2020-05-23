@@ -1,20 +1,26 @@
 import React from 'react'
-import { ReRequest } from './useReHttp'
+import { CacheObject, ReHttpRequest, ReHttpResponse, ReHttpProps } from './useReHttp'
 
-export interface ReHttpProviderProps {
+export interface CacheAdapter<TData = any> {
+  ttl: number
+  size: number
+  get: (requestKey: string) => Promise<CacheObject<TData> | undefined>
+  set: (requestKey: string, response: ReHttpResponse<TData>) => Promise<CacheObject<TData>>
+  has: (requestKey: string) => Promise<boolean>
+  delete: (requestKey: string) => Promise<boolean>
+  clear: () => Promise<void>
+}
+
+export interface ReHttpProviderProps
+  extends Omit<Partial<ReHttpRequest>, 'url' | 'body'>,
+    Omit<ReHttpProps, 'noCache'> {
   baseUrl?: string
-  method?: 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
-  params?: Record<string, string | number | Array<string | number>>
-  headers?: Record<string, string>
 
-  onRequest?: (data: ReRequest) => Promise<void>
-  onResponse?: (data: any, response: Response) => Promise<void>
+  onRequest?: (data: ReHttpRequest) => Promise<void>
+  onResponse?: (data: any, response: ReHttpResponse) => Promise<void>
   onError?: (error: any) => Promise<void>
-  onComplete?: (dataOrError: any, response?: Response) => Promise<void>
-  transformError?: (data: any) => Promise<any>
-  transformResponse?: (data: any, response: Response) => Promise<any>
-  transformRequest?: (data: ReRequest) => Promise<ReRequest>
-  lazy?: boolean
+  onComplete?: (dataOrError: any, response?: ReHttpResponse) => Promise<void>
+  cacheAdapter?: CacheAdapter
 }
 
 export const ReHttpContext = React.createContext<ReHttpProviderProps>({})

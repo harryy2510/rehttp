@@ -6,7 +6,6 @@
   "license": "MIT",
   "repository": "harryy2510/rehttp",
   "main": "dist/index.js",
-  "umd:main": "dist/index.umd.js",
   "module": "dist/index.modern.js",
   "types": "dist/index.d.ts",
   "source": "src/index.ts",
@@ -14,8 +13,8 @@
     "node": ">=10"
   },
   "scripts": {
-    "build": "microbundle-crl --no-sourcemap",
-    "start": "microbundle-crl watch --no-compress",
+    "build": "microbundle-crl --no-sourcemap --format modern,cjs",
+    "start": "microbundle-crl watch --no-compress --format modern,cjs",
     "prepublishOnly": "run-s build",
     "test": "run-s test:unit test:lint test:build",
     "test:build": "run-s build",
