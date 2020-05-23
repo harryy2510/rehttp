@@ -1,11 +1,8 @@
 import { CacheAdapter } from '../ReHttpProvider'
 import { CacheObject, ReHttpResponse } from '../useReHttp'
 
-export const isCacheObjectValid = <TData = any>(cacheObject: CacheObject<TData>, ttl: number) => {
-  const cacheTime = new Date(cacheObject.createdAt).valueOf()
-  const currentTime = new Date().valueOf()
-  return currentTime - cacheTime < ttl
-}
+const isCacheObjectValid = <TData = any>(cacheObject: CacheObject<TData>, ttl: number) =>
+  new Date().valueOf() - new Date(cacheObject.createdAt).valueOf() < ttl
 
 export class InMemoryAdapter<TData = any> implements CacheAdapter<TData> {
   ttl: number = 300000
@@ -14,10 +11,10 @@ export class InMemoryAdapter<TData = any> implements CacheAdapter<TData> {
 
   constructor(options?: { ttl?: number; size?: number }) {
     if (options?.ttl) {
-      this.ttl = options?.ttl
+      this.ttl = options.ttl
     }
     if (options?.size) {
-      this.size = options?.size
+      this.size = options.size
     }
   }
 

@@ -13,7 +13,7 @@
     "node": ">=10"
   },
   "scripts": {
-    "build": "microbundle-crl --no-sourcemap --format modern,cjs",
+    "build": "rimraf -rf dist && microbundle-crl --no-sourcemap --raw --format modern,cjs",
     "start": "microbundle-crl watch --no-compress --format modern,cjs",
     "prepublishOnly": "run-s build",
     "test": "run-s test:unit test:lint test:build",
