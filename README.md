@@ -170,11 +170,21 @@ class MyComponent extends React.Component {
           tags: ['hello', 'world']
         },  // Optional, type: Record<string, string | number | Array<string | number>>, default: undefined
         body: undefined, // Optional, type: any, default: undefined
+        onRequest: () => {
+            showLoader()
+        }, //Optional, type: (data: ReHttpRequest) => Promise<void>
+        onResponse: () => {
+            showSuccess('request success')
+        }, //Optional, type: (data: any, response: ReHttpResponse) => Promise<void>
+        onError: (error) => {
+            showAlert(error.message)
+        }, // Optional, type: (error: any) => Promise<void>
+
         transformError: async (e) => {
-        return {
-          status: 'NOTOK',
-          message: e.message
-        }
+            return {
+              status: 'NOTOK',
+              message: e.message
+            }
         }, // Optional, type: (data: any) => Promise<PostError>, default: undefined
         transformResponse: async (data: any, response: ReHttpResponse) => {
           if (data.id && response.status === 200) {

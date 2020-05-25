@@ -16,6 +16,7 @@ export const executeReHttpRequest = async <TData = any, TError = any>(
     reRequest = await options.transformRequest(reRequest)
   }
   await globalConfig.onRequest?.(reRequest)
+  await options?.onRequest?.(reRequest)
   try {
     let { data, httpResponse, cached } = await fetchOrCache<TData>(
       reRequest,
@@ -31,6 +32,7 @@ export const executeReHttpRequest = async <TData = any, TError = any>(
     if (options?.transformResponse) {
       data = await options.transformResponse(data, httpResponse)
     }
+    await options?.onResponse?.(data, httpResponse)
     return { data, response: httpResponse, cached, error: null, loading: false, isRequestInFlight: false }
   } catch (error) {
     await globalConfig.onError?.(error)
