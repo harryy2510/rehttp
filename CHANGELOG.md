@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/harryy2510/rehttp/compare/v1.2.1...v1.2.2) (2020-05-25)
+
+
+### Bug Fixes
+
+* made all provider props optional ([d25aac4](https://github.com/harryy2510/rehttp/commit/d25aac41e069ee3c55df99a263239ce174631c33))
+
 ## [1.2.1](https://github.com/harryy2510/rehttp/compare/v1.2.0...v1.2.1) (2020-05-23)
 
 # [1.2.0](https://github.com/harryy2510/rehttp/compare/v1.1.1...v1.2.0) (2020-05-23)
