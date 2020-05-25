@@ -100,7 +100,7 @@ useReHttp<Post, PostError>({
     url: 'https://jsonplaceholder.typicode.com/posts', // Optional, type: string, default: ''
     headers: {
       Accept: 'application/json'
-    }, // Optional, type: Record<string, string>, default: { Accept: 'application/json', 'Content-Type': 'application/json' }
+    }, // Optional, type: Record<string, string>, default: undefined
     params: {
       page: 1,
       per_page: 5,
