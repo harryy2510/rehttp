@@ -175,10 +175,10 @@ class MyComponent extends React.Component {
         }, //Optional, type: (data: ReHttpRequest) => Promise<void>
         onResponse: () => {
             showSuccess('request success')
-        }, //Optional, type: (data: any, response: ReHttpResponse) => Promise<void>
+        }, //Optional, type: (data: Post, response: ReHttpResponse) => Promise<void>
         onError: (error) => {
             showAlert(error.message)
-        }, // Optional, type: (error: any) => Promise<void>
+        }, // Optional, type: (error: PostError) => Promise<void>
 
         transformError: async (e) => {
             return {
