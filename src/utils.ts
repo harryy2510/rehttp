@@ -56,8 +56,6 @@ export const generateRequest = (
   }
   const url = urlJoin(globalConfig.baseUrl, executeInput?.url || input.url, params)
   const headers = {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
     ...(globalConfig.headers || {}),
     ...(input.headers || {}),
     ...(executeInput?.headers || {})
