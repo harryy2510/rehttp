@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/harryy2510/rehttp/compare/v1.3.0...v1.3.1) (2020-05-25)
+
+
+### Bug Fixes
+
+* fixed typings for onResponse, onError ([4cf1cc7](https://github.com/harryy2510/rehttp/commit/4cf1cc70062514da192a49da7cac3cfe974c4977))
+
 # [1.3.0](https://github.com/harryy2510/rehttp/compare/v1.2.3...v1.3.0) (2020-05-25)
 
 
