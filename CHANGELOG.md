@@ -1,3 +1,10 @@
+## [1.2.3](https://github.com/harryy2510/rehttp/compare/v1.2.2...v1.2.3) (2020-05-25)
+
+
+### Bug Fixes
+
+* removed default headers ([a384f30](https://github.com/harryy2510/rehttp/commit/a384f30359f772a51e13543ea45c808bd2d89866))
+
 ## [1.2.2](https://github.com/harryy2510/rehttp/compare/v1.2.1...v1.2.2) (2020-05-25)
 
 
