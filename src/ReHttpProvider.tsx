@@ -11,9 +11,10 @@ export interface CacheAdapter<TData = any> {
   clear: () => Promise<void>
 }
 
-export interface ReHttpProviderProps
-  extends Omit<Partial<ReHttpRequest>, 'url' | 'body'>,
-    Omit<ReHttpOptions, 'noCache'> {
+export interface ReHttpProviderProps extends Omit<ReHttpOptions, 'noCache'> {
+  method?: 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
+  headers?: Record<string, string>
+  params?: Record<string, string | number | Array<string | number>>
   baseUrl?: string
 
   onRequest?: (data: ReHttpRequest) => Promise<void>
