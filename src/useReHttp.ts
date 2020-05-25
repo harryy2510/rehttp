@@ -39,7 +39,7 @@ export interface ReHttpOptions<TData = any, TError = any> {
   onError?: (error: TError) => Promise<void>
   transformError?: (data: any) => Promise<TError>
   transformResponse?: (data: any, response: ReHttpResponse) => Promise<TData>
-  transformRequest?: (data: ReHttpRequest) => Promise<ReHttpRequest>
+  transformRequest?: (data: ReHttpRequest) => Promise<Partial<ReHttpRequest>>
   lazy?: boolean
   noCache?: boolean
 }
