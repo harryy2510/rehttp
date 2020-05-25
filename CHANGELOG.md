@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/harryy2510/rehttp/compare/v1.3.1...v1.3.2) (2020-05-25)
+
+
+### Bug Fixes
+
+* fixed typings for transformRequest ([5d4f220](https://github.com/harryy2510/rehttp/commit/5d4f2205387788db6ac3d78d16cac9d5f14be4cd))
+
 ## [1.3.1](https://github.com/harryy2510/rehttp/compare/v1.3.0...v1.3.1) (2020-05-25)
 
 
