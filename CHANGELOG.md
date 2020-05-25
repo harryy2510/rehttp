@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/harryy2510/rehttp/compare/v1.2.3...v1.3.0) (2020-05-25)
+
+
+### Features
+
+* added onResponse, onError, onRequest to individual request ([7276e68](https://github.com/harryy2510/rehttp/commit/7276e6870bb16fd8403265725c6522d881cd8ed3))
+
 ## [1.2.3](https://github.com/harryy2510/rehttp/compare/v1.2.2...v1.2.3) (2020-05-25)
 
 
