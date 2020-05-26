@@ -1,3 +1,10 @@
+## [1.3.6](https://github.com/harryy2510/rehttp/compare/v1.3.5...v1.3.6) (2020-05-26)
+
+
+### Bug Fixes
+
+* added specific http methods to cache ([dbcfff3](https://github.com/harryy2510/rehttp/commit/dbcfff3779f5f1098e4dce839eecce295315ee51))
+
 ## [1.3.5](https://github.com/harryy2510/rehttp/compare/v1.3.4...v1.3.5) (2020-05-26)
 
 
