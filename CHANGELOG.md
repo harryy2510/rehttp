@@ -1,3 +1,10 @@
+## [1.3.4](https://github.com/harryy2510/rehttp/compare/v1.3.3...v1.3.4) (2020-05-26)
+
+
+### Bug Fixes
+
+* fixed error callback in individual requests ([17ccd1e](https://github.com/harryy2510/rehttp/commit/17ccd1e3c32cb7d4a86c26b0cb9db62c8ed0b6ad))
+
 ## [1.3.3](https://github.com/harryy2510/rehttp/compare/v1.3.2...v1.3.3) (2020-05-26)
 
 
