@@ -1,3 +1,10 @@
+## [1.3.5](https://github.com/harryy2510/rehttp/compare/v1.3.4...v1.3.5) (2020-05-26)
+
+
+### Bug Fixes
+
+* added on complete callback to individual request ([defc4b1](https://github.com/harryy2510/rehttp/commit/defc4b15b90b7c7fb52a21aed2bc5ca97f2e34d5))
+
 ## [1.3.4](https://github.com/harryy2510/rehttp/compare/v1.3.3...v1.3.4) (2020-05-26)
 
 
