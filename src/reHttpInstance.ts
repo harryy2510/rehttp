@@ -33,11 +33,13 @@ export const executeReHttpRequest = async <TData = any, TError = any>(
       data = await options.transformResponse(data, httpResponse)
     }
     await options?.onResponse?.(data, httpResponse)
+    await options?.onComplete?.(data, httpResponse)
     return { data, response: httpResponse, cached, error: null, loading: false, isRequestInFlight: false }
   } catch (error) {
     await globalConfig.onError?.(error)
-    await options?.onError?.(error)
     await globalConfig.onComplete?.(error)
+    await options?.onError?.(error)
+    await options?.onComplete?.(error)
     return { data: null, response: null, error, loading: false, isRequestInFlight: false, cached: null }
   }
 }

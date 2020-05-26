@@ -35,8 +35,9 @@ export interface ReHttpReturn<TData = any, TError = any> {
 
 export interface ReHttpOptions<TData = any, TError = any> {
   onRequest?: (data: ReHttpRequest) => Promise<void>
-  onResponse?: (data: TData, response: ReHttpResponse) => Promise<void>
+  onResponse?: (data: TData, response: ReHttpResponse<TData>) => Promise<void>
   onError?: (error: TError) => Promise<void>
+  onComplete?: (dataOrError: any, response?: ReHttpResponse<TData>) => Promise<void>
   transformError?: (data: any) => Promise<TError>
   transformResponse?: (data: any, response: ReHttpResponse) => Promise<TData>
   transformRequest?: (data: ReHttpRequest) => Promise<ReHttpRequest>
