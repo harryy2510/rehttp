@@ -22,6 +22,7 @@ export interface ReHttpProviderProps extends Omit<ReHttpOptions, 'noCache'> {
   onError?: (error: any) => Promise<void>
   onComplete?: (dataOrError: any, response?: ReHttpResponse) => Promise<void>
   cacheAdapter?: CacheAdapter
+  cacheMethods?: Array<ReHttpRequest['method']>
 }
 
 declare global {
@@ -40,6 +41,10 @@ const ReHttpProvider: React.FC<ReHttpProviderProps> = ({ children, ...props }) =
     }
   }, [props])
   return <ReHttpContext.Provider value={props}>{children}</ReHttpContext.Provider>
+}
+
+ReHttpProvider.defaultProps = {
+  cacheMethods: ['GET']
 }
 
 export default ReHttpProvider

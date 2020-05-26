@@ -68,12 +68,14 @@ export const generateRequest = (
 export const fetchOrCache = async <TData = any>(
   reRequest: ReHttpRequest,
   cacheAdapter?: CacheAdapter<TData>,
+  cacheMethods?: Array<ReHttpRequest['method']>,
   noCache?: boolean
 ) => {
   let data: TData
   let httpResponse: ReHttpResponse<TData>
   let cached: CacheObject<TData> | null = null
-  if (!noCache && (await cacheAdapter?.has(reRequest.url))) {
+  const checkCache = cacheMethods?.includes(reRequest.method) && !noCache
+  if (checkCache && (await cacheAdapter?.has(reRequest.url))) {
     cached = (await cacheAdapter?.get(reRequest.url))!
     httpResponse = cached.response
     data = httpResponse.data

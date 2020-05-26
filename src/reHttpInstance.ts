@@ -21,6 +21,7 @@ export const executeReHttpRequest = async <TData = any, TError = any>(
     let { data, httpResponse, cached } = await fetchOrCache<TData>(
       reRequest,
       globalConfig.cacheAdapter,
+      globalConfig.cacheMethods,
       options?.noCache
     )
     if (globalConfig.transformResponse) {

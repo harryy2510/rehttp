@@ -238,6 +238,7 @@ import { ReHttpProvider, ReHttpProviderProps, ReHttpRequest, ReHttpResponse, InM
 const App: React.FC = () => {
     const options: ReHttpProviderProps = {
         cacheAdapter: new InMemoryAdapter({ttl: 5 * 60 * 1000, size: 50}),  // Optional, type: CacheAdapter, params: {ttl?: 5 * 60* 1000, size?: 50}?, ttl is in milliseconds
+        cacheMethods: ['GET'], // Optional, type: Array<ReHttpRequest['method']>, default: ['GET'], http methods that needs to be cached
         baseUrl: 'https://jsonplaceholder.typicode.com', // Optional, type: string
         method: 'GET', // Optional, type: 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
         params: {}, // Optional, type: Record<string, string | number | Array<string | number>>
