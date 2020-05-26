@@ -36,6 +36,7 @@ export const executeReHttpRequest = async <TData = any, TError = any>(
     return { data, response: httpResponse, cached, error: null, loading: false, isRequestInFlight: false }
   } catch (error) {
     await globalConfig.onError?.(error)
+    await options?.onError?.(error)
     await globalConfig.onComplete?.(error)
     return { data: null, response: null, error, loading: false, isRequestInFlight: false, cached: null }
   }
