@@ -48,7 +48,7 @@ export interface ReHttpOptions<TData = any, TError = any> {
 const useReHttp = <TData = any, TError = any>(
   input: Partial<ReHttpRequest>,
   options?: ReHttpOptions<TData, TError>
-): ReHttpReturn<TData> => {
+): ReHttpReturn<TData, TError> => {
   const contextValues = useReHttpContext()
   const lazy = Boolean(options?.lazy ?? contextValues.lazy)
   const [response, setResponse] = React.useState<Omit<ReHttpReturn<TData, TError>, 'execute'>>({
