@@ -1,3 +1,10 @@
+## [1.3.7](https://github.com/harryy2510/rehttp/compare/v1.3.6...v1.3.7) (2020-05-27)
+
+
+### Bug Fixes
+
+* error return type in execute function ([b842ccf](https://github.com/harryy2510/rehttp/commit/b842ccf840aabb7e7af2301e417e01e3076efd3f))
+
 ## [1.3.6](https://github.com/harryy2510/rehttp/compare/v1.3.5...v1.3.6) (2020-05-26)
 
 
