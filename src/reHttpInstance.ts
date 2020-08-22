@@ -1,6 +1,6 @@
 import { ReHttpProviderProps } from './ReHttpProvider'
 import { ReHttpOptions, ReHttpRequest, ReHttpReturn } from './useReHttp'
-import { fetchOrCache, generateRequest } from './utils'
+import { fetchOrCache, generateRequest, global } from './utils'
 
 export const executeReHttpRequest = async <TData = any, TError = any>(
   globalConfig: ReHttpProviderProps,
@@ -49,7 +49,7 @@ const reHttpInstance = async <TData = any, TError = any>(
   input: Partial<ReHttpRequest>,
   options?: ReHttpOptions<TData, TError>
 ): Promise<ReHttpReturn<TData, TError>> => {
-  const globalConfig = (typeof window !== 'undefined' && window.reHttpConfig) || {}
+  const globalConfig = (typeof global !== 'undefined' && global.reHttpConfig) || {}
   const execute = (executeInput?: Partial<ReHttpRequest>) =>
     executeReHttpRequest<TData, TError>(globalConfig, input, options, executeInput)
   const response = await execute()

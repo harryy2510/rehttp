@@ -91,3 +91,16 @@ export const fetchOrCache = async <TData = any>(
   }
   return { data, httpResponse, cached }
 }
+
+export const global = ((): { reHttpConfig: ReHttpProviderProps } | undefined => {
+  if (typeof globalThis !== 'undefined') {
+    return globalThis as any
+  }
+  if (typeof global !== 'undefined') {
+    return global as any
+  }
+  if (typeof window !== 'undefined') {
+    return window as any
+  }
+  return undefined
+})()

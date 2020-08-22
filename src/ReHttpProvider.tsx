@@ -1,5 +1,6 @@
 import React from 'react'
 import { CacheObject, ReHttpOptions, ReHttpRequest, ReHttpResponse } from './useReHttp'
+import { global } from './utils'
 
 export interface CacheAdapter<TData = any> {
   ttl: number
@@ -25,19 +26,13 @@ export interface ReHttpProviderProps extends Omit<ReHttpOptions, 'noCache'> {
   cacheMethods?: Array<ReHttpRequest['method']>
 }
 
-declare global {
-  interface Window {
-    reHttpConfig: ReHttpProviderProps
-  }
-}
-
 export const ReHttpContext = React.createContext<ReHttpProviderProps>({})
 export const useReHttpContext = () => React.useContext(ReHttpContext)
 
 const ReHttpProvider: React.FC<ReHttpProviderProps> = ({ children, ...props }) => {
   React.useEffect(() => {
-    if (typeof window !== 'undefined') {
-      window.reHttpConfig = props
+    if (typeof global !== 'undefined') {
+      global.reHttpConfig = props
     }
   }, [props])
   return <ReHttpContext.Provider value={props}>{children}</ReHttpContext.Provider>
