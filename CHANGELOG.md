@@ -1,3 +1,10 @@
+## [1.3.8](https://github.com/harryy2510/rehttp/compare/v1.3.7...v1.3.8) (2020-08-22)
+
+
+### Bug Fixes
+
+* added support for global variable for all environments ([f5ffbdf](https://github.com/harryy2510/rehttp/commit/f5ffbdf2b6f62243c727fb7fc2dab46d63099597))
+
 ## [1.3.7](https://github.com/harryy2510/rehttp/compare/v1.3.6...v1.3.7) (2020-05-27)
 
 
