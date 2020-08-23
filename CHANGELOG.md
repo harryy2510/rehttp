@@ -1,3 +1,10 @@
+## [1.3.9](https://github.com/harryy2510/rehttp/compare/v1.3.8...v1.3.9) (2020-08-23)
+
+
+### Bug Fixes
+
+* initial setting of global object ([46f917e](https://github.com/harryy2510/rehttp/commit/46f917e4d0be9edb3fa2647a4bcdda142dea88ef))
+
 ## [1.3.8](https://github.com/harryy2510/rehttp/compare/v1.3.7...v1.3.8) (2020-08-22)
 
 
