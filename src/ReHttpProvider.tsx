@@ -30,11 +30,9 @@ export const ReHttpContext = React.createContext<ReHttpProviderProps>({})
 export const useReHttpContext = () => React.useContext(ReHttpContext)
 
 const ReHttpProvider: React.FC<ReHttpProviderProps> = ({ children, ...props }) => {
-  React.useEffect(() => {
-    if (typeof global !== 'undefined') {
-      global.reHttpConfig = props
-    }
-  }, [props])
+  if (typeof global !== 'undefined') {
+    global.reHttpConfig = props
+  }
   return <ReHttpContext.Provider value={props}>{children}</ReHttpContext.Provider>
 }
 
