@@ -38,7 +38,7 @@ export const generateResponse = <TData = any>(res: Response, data: TData): ReHtt
   const response = {
     data
   }
-  keysToCopy.map(key => {
+  keysToCopy.forEach(key => {
     response[key] = res[key]
   })
   return response as ReHttpResponse<TData>
@@ -62,7 +62,8 @@ export const generateRequest = (
   }
   const body = executeInput?.body || input.body
   const method = executeInput?.method || input.method || globalConfig.method || 'GET'
-  return { params, url, headers, body, method }
+  const credentials = executeInput?.credentials || input.credentials || globalConfig.credentials
+  return { params, url, headers, body, method, credentials }
 }
 
 export const fetchOrCache = async <TData = any>(

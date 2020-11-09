@@ -12,9 +12,10 @@ const ReHttp = <TData, TError>({
   headers,
   params,
   body,
+  credentials,
   ...options
 }: ReHttpProps<TData, TError>): React.ReactElement | null => {
-  const request = { method, url, headers, params, body }
+  const request = { method, url, headers, params, body, credentials }
   const renderProps = useReHttp<TData, TError>(request, options)
   return children(renderProps)
 }

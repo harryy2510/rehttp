@@ -2,6 +2,11 @@ import React from 'react'
 import { executeReHttpRequest } from './reHttpInstance'
 import { useReHttpContext } from './ReHttpProvider'
 
+export interface ReHttpResponse<TData = any>
+  extends Pick<Response, 'headers' | 'ok' | 'redirected' | 'status' | 'statusText' | 'type' | 'url'> {
+  data: TData
+}
+
 export interface CacheObject<TData = any> {
   accessCount: number
   lastAccessedAt: string | null
@@ -16,11 +21,7 @@ export interface ReHttpRequest {
   headers: Record<string, string>
   params: Record<string, string | number | Array<string | number>>
   body: any
-}
-
-export interface ReHttpResponse<TData = any>
-  extends Pick<Response, 'headers' | 'ok' | 'redirected' | 'status' | 'statusText' | 'type' | 'url'> {
-  data: TData
+  credentials?: RequestCredentials
 }
 
 export interface ReHttpReturn<TData = any, TError = any> {

@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-use-before-define
 import React from 'react'
 import { CacheObject, ReHttpOptions, ReHttpRequest, ReHttpResponse } from './useReHttp'
 import { global } from './utils'
@@ -17,6 +18,7 @@ export interface ReHttpProviderProps extends Omit<ReHttpOptions, 'noCache'> {
   headers?: Record<string, string>
   params?: Record<string, string | number | Array<string | number>>
   baseUrl?: string
+  credentials?: RequestCredentials
 
   onRequest?: (data: ReHttpRequest) => Promise<void>
   onResponse?: (data: any, response: ReHttpResponse) => Promise<void>
