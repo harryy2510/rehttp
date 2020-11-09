@@ -84,7 +84,8 @@ export const fetchOrCache = async <TData = any>(
     const fetchResponse = await fetch(reRequest.url, {
       body: reRequest.body,
       headers: reRequest.headers,
-      method: reRequest.method
+      method: reRequest.method,
+      credentials: reRequest.credentials
     })
     data = await fetchResponse.json()
     httpResponse = generateResponse<TData>(fetchResponse, data)
