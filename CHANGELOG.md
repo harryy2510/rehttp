@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/harryy2510/rehttp/compare/v1.4.0...v1.4.1) (2020-11-09)
+
+
+### Bug Fixes
+
+* pass credentials to fetch ([957bfa2](https://github.com/harryy2510/rehttp/commit/957bfa23521f6b85d1113a3fc904e615f23c3dea))
+
 # [1.4.0](https://github.com/harryy2510/rehttp/compare/v1.3.9...v1.4.0) (2020-11-09)
 
 
