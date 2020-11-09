@@ -1,3 +1,11 @@
+# [1.4.0](https://github.com/harryy2510/rehttp/compare/v1.3.9...v1.4.0) (2020-11-09)
+
+
+### Features
+
+* added credentials support ([3d65954](https://github.com/harryy2510/rehttp/commit/3d65954189b082b6205e8dac0883452ffaebf4ac))
+* added credentials support ([1da0235](https://github.com/harryy2510/rehttp/commit/1da023512af22256ca8a6255f375df610fda275f))
+
 ## [1.3.9](https://github.com/harryy2510/rehttp/compare/v1.3.8...v1.3.9) (2020-08-23)
 
 
