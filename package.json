@@ -26,7 +26,7 @@
     "release": "release-it"
   },
   "peerDependencies": {
-    "react": "^17.0.1"
+    "react": ">=16.8.0"
   },
   "devDependencies": {
     "@release-it/conventional-changelog": "^2.0.0",
