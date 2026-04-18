@@ -1,319 +1,151 @@
-# React + HTTP = ReHttp
-> A highly customizable http client library for react
+<p align="center">
+  <h1 align="center">ReHttp</h1>
+  <p align="center">
+    <strong>Lightweight HTTP client for React with hooks, caching, and transforms.</strong>
+  </p>
+  <p align="center">
+    <code>useReHttp hook</code> · <code>class components</code> · <code>outside React</code> · <code>in-memory cache</code>
+  </p>
+</p>
 
+<p align="center">
+  <a href="https://www.npmjs.com/package/@harryy/rehttp"><img src="https://img.shields.io/npm/v/@harryy/rehttp.svg?style=flat-square" alt="npm"></a>
+  <a href="https://react.dev"><img src="https://img.shields.io/badge/React_16.8%2B-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React"></a>
+  <a href="https://www.typescriptlang.org"><img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript"></a>
+</p>
 
-[![npm (scoped)](https://badgen.net/npm/v/@harryy/rehttp)](https://npmjs.com/package/@harryy/rehttp)
-[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-![GitHub](https://badgen.net/github/license/harryy2510/rehttp)
-![npm bundle size (scoped)](https://badgen.net/bundlephobia/minzip/@harryy/rehttp)
-![npm bundle size (scoped)](https://badgen.net/bundlephobia/min/@harryy/rehttp)
-![GitHub top language](https://img.shields.io/github/languages/top/harryy2510/rehttp)
-![David](https://img.shields.io/david/harryy2510/rehttp)
+---
 
-## Features
+> **Note:** This project is archived. For new projects, consider React Query or SWR.
 
-- [x] No bloated dependencies
-- [x] Optional global configuration
-- [x] Typescript support
-- [x] Promise based
-- [x] Hooks for function component
-- [x] Lazy fetch support
-- [x] Transforming request and response
-- [x] Callbacks for request, response and error
-- [x] Caching
-- [x] Use outside of react context
-- [x] Component (for class based component)
+---
 
-## Installation
-
-Yarn:
-
-```bash
-yarn add @harryy/rehttp
-```
-
-NPM:
+## Install
 
 ```bash
 npm install @harryy/rehttp
 ```
 
+---
+
 ## Usage
 
+### Hook
+
 ```tsx
-import React from 'react'
+import { useReHttp } from '@harryy/rehttp'
 
-import { useReHttp } from 'rehttp'
+function Posts() {
+  const { data, loading, error, execute } = useReHttp<Post[]>({
+    method: 'GET',
+    url: '/api/posts'
+  })
 
-const Example: React.FC = () => {
-    const {data, refetch, loading} = useReHttp({
-        url: 'https://jsonplaceholder.typicode.com/posts/1'
-    })
-    if (loading) {
-        return <>Loading...</>
-    }
-    return (
-        <>
-            {data.title}
-            <button onClick={() => refetch()}>Refetch</button>
-        </>
-     )
+  if (loading) return <p>Loading...</p>
+  if (error) return <p>Error: {error.message}</p>
+
+  return (
+    <ul>
+      {data.map(post => <li key={post.id}>{post.title}</li>)}
+    </ul>
+  )
 }
 ```
+
+### Lazy fetch
+
+```tsx
+const { data, execute } = useReHttp<User>(
+  { method: 'POST', url: '/api/users' },
+  { lazy: true }
+)
+
+const handleSubmit = (body) => execute({ body })
+```
+
+### Provider (global config)
+
+```tsx
+import { ReHttpProvider, InMemoryAdapter } from '@harryy/rehttp'
+
+function App() {
+  return (
+    <ReHttpProvider
+      baseUrl="https://api.example.com"
+      cacheAdapter={new InMemoryAdapter({ ttl: 5 * 60 * 1000, size: 50 })}
+      cacheMethods={['GET']}
+      transformRequest={(req) => ({
+        ...req,
+        headers: { ...req.headers, Authorization: `Bearer ${token}` }
+      })}
+    >
+      <MyApp />
+    </ReHttpProvider>
+  )
+}
+```
+
+### Class components
+
+```tsx
+import { ReHttp } from '@harryy/rehttp'
+
+<ReHttp<Post> url="/api/posts/1" method="GET">
+  {({ data, refetch }) => <div>{data.title}</div>}
+</ReHttp>
+```
+
+### Outside React
+
+```tsx
+import { reHttpInstance } from '@harryy/rehttp'
+
+const response = await reHttpInstance({ url: '/api/posts' })
+```
+
+---
 
 ## API
 
-##### `const {data, response, error, loading, execute, isRequestInFlight, cached} = useReHttp(request, options?)`
+### `useReHttp<T, E>(request, options?)`
 
-By default, request will be fired if `lazy: true` is not passed as an option.
+**Request:** `method`, `url`, `headers`, `params`, `body`
 
-`data` contains json serialized data
+**Options:** `lazy`, `noCache`, `transformRequest`, `transformResponse`, `transformError`
 
-`response` contains the raw response from the server
+**Returns:**
 
-`error` contains the error if any
-
-`loading` is `true` only when there is no data or error
-
-`isRequestInFlight` tells whether the request is in flight or not
-
-`execute` can be called with optional `request` parameters to refetch data again
-
-`cached` gives the cached object if the request was cached earlier
-
-
-```tsx
-import React from 'react'
-import { useReHttp, ReHttpRequest, ReHttpResponse } from 'rehttp'
-
-interface Post {
-  id: string,
-  title: string,
-}
-interface PostError {
-  message: string,
-  status: 'NOTOK',
-}
-
-useReHttp<Post, PostError>({
-    method: 'GET', // Optional, type: 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT', default: 'GET'
-    url: 'https://jsonplaceholder.typicode.com/posts', // Optional, type: string, default: ''
-    headers: {
-      Accept: 'application/json'
-    }, // Optional, type: Record<string, string>, default: undefined
-    params: {
-      page: 1,
-      per_page: 5,
-      tags: ['hello', 'world']
-    },  // Optional, type: Record<string, string | number | Array<string | number>>, default: undefined
-    body: undefined // Optional, type: any, default: undefined
-}, {
-  transformError: async (e) => {
-    return {
-      status: 'NOTOK',
-      message: e.message
-    }
-  }, // Optional, type: (data: any) => Promise<PostError>, default: undefined
-  transformResponse: async (data: any, response: ReHttpResponse) => {
-      if (data.id && response.status === 200) {
-        return {
-          id: data.id,
-          title: data.title.toUpperCase()
-        }
-      } else {
-        return Promise.reject(new Error('Post has no id'))
-      }
-  }, // Optional, type: (data: any, response: ReHttpResponse) => Promise<Post>, default: undefined
-  transformRequest: async (res: ReHttpRequest) => {
-    const token = await SomeAsyncStorageOrApiOrWhatever().token
-    return {
-      ...res,
-      params: {
-        foo: 'bar',
-      },
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }
-  }, // Optional, type: (data: ReHttpRequest) => Promise<ReHttpRequest>, default: undefined
-  lazy: true, // Optional, type: boolean, default: false
-  noCache: true, // Optional, type: boolean, default: false
-});
+```
+  PROPERTY            TYPE              DESCRIPTION
+  --------            ----              -----------
+  data                T | null          Response body
+  response            object            Full response (headers, status)
+  error               E | null          Error object
+  loading             boolean           True when no data or error yet
+  cached              object | null     Cache metadata if from cache
+  isRequestInFlight   boolean           True during active request
+  execute             function          Refetch or change request params
 ```
 
+---
 
-##### Need to use in class component? No Problem!
+## Features
 
-```tsx
-import React from 'react'
-import { ReHttp, ReHttpProps } from 'rehttp'
-
-interface Post {
-  id: string,
-  title: string,
-}
-interface PostError {
-  message: string,
-  status: 'NOTOK',
-}
-
-class MyComponent extends React.Component {
-    reHttpProps: Omit<ReHttpProps<Post, PostError>, 'children'> = {
-        method: 'GET', // Optional, type: 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT', default: 'GET'
-        url: 'https://jsonplaceholder.typicode.com/posts', // Optional, type: string, default: ''
-        headers: {
-          Accept: 'application/json'
-        }, // Optional, type: Record<string, string>, default: { Accept: 'application/json', 'Content-Type': 'application/json' }
-        params: {
-          page: 1,
-          per_page: 5,
-          tags: ['hello', 'world']
-        },  // Optional, type: Record<string, string | number | Array<string | number>>, default: undefined
-        body: undefined, // Optional, type: any, default: undefined
-        onRequest: () => {
-            showLoader()
-        }, //Optional, type: (data: ReHttpRequest) => Promise<void>
-        onResponse: () => {
-            showSuccess('request success')
-        }, //Optional, type: (data: Post, response: ReHttpResponse) => Promise<void>
-        onError: (error) => {
-            showAlert(error.message)
-        }, // Optional, type: (error: PostError) => Promise<void>
-
-        transformError: async (e) => {
-            return {
-              status: 'NOTOK',
-              message: e.message
-            }
-        }, // Optional, type: (data: any) => Promise<PostError>, default: undefined
-        transformResponse: async (data: any, response: ReHttpResponse) => {
-          if (data.id && response.status === 200) {
-            return {
-              id: data.id,
-              title: data.title.toUpperCase()
-            }
-          } else {
-            return Promise.reject(new Error('Post has no id'))
-          }
-        }, // Optional, type: (data: any, response: ReHttpResponse) => Promise<Post>, default: undefined
-        transformRequest: async (res: ReHttpRequest) => {
-        const token = await SomeAsyncStorageOrApiOrWhatever().token
-        return {
-          ...res,
-          params: {
-            foo: 'bar',
-          },
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-        }, // Optional, type: (data: ReHttpRequest) => Promise<ReHttpRequest>, default: undefined
-        lazy: true, // Optional, type: boolean, default: false
-        noCache: true, // Optional, type: boolean, default: false
-    }
-    render() {
-        <ReHttp<Post, PostError> {...this.reHttpProps}>
-          {
-            ({data, refetch}) => (
-              <>
-                {data.title}
-                <button onClick={() => refetch()}>Refetch</button>
-              </>
-          )
-        </ReHttp>
-    }
-}
+```
+  ┌─────────────────────────────────────────────────────────┐
+  │                                                         │
+  │  Three APIs        Hook, class component, non-React     │
+  │  Caching           In-memory with configurable TTL      │
+  │  Transforms        Request / response / error pipeline  │
+  │  Lifecycle         onRequest, onResponse, onError       │
+  │  Lazy fetch        Manual control over when to fire     │
+  │  TypeScript        Full generics for data and errors    │
+  │                                                         │
+  └─────────────────────────────────────────────────────────┘
 ```
 
-
-##### Need to set options globally? No problem!
-
-#### `ReHttpProvider`
-
-```tsx
-import React from 'react'
-
-import { ReHttpProvider, ReHttpProviderProps, ReHttpRequest, ReHttpResponse, InMemoryAdapter } from 'rehttp'
-
-const App: React.FC = () => {
-    const options: ReHttpProviderProps = {
-        cacheAdapter: new InMemoryAdapter({ttl: 5 * 60 * 1000, size: 50}),  // Optional, type: CacheAdapter, params: {ttl?: 5 * 60* 1000, size?: 50}?, ttl is in milliseconds
-        cacheMethods: ['GET'], // Optional, type: Array<ReHttpRequest['method']>, default: ['GET'], http methods that needs to be cached
-        baseUrl: 'https://jsonplaceholder.typicode.com', // Optional, type: string
-        method: 'GET', // Optional, type: 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT'
-        params: {}, // Optional, type: Record<string, string | number | Array<string | number>>
-        headers: {}, // Optional, type: Record<string, string>
-        onRequest: () => {
-            showLoader()
-        }, //Optional, type: (data: ReHttpRequest) => Promise<void>
-        onResponse: () => {
-            showSuccess('request success')
-        }, //Optional, type: (data: any, response: ReHttpResponse) => Promise<void>
-        onError: (error) => {
-            showAlert(error.message)
-        }, // Optional, type: (error: any) => Promise<void>
-        onComplete: (dataOrError, response) => {
-            hideLoader()
-        }, // Optional, type: (dataOrError: any, response?: ReHttpResponse) => Promise<void>
-        transformError: async (e) => {
-            return {
-                status: 'NOTOK',
-                message: e.message
-            }
-        }, // Optional, type: (data: any) => Promise<PostError>, default: undefined
-        transformResponse: async (data: any, response: ReHttpResponse) => {
-            if (data.id && response.status === 200) {
-                return {
-                    id: data.id,
-                    title: data.title.toUpperCase()
-                }
-            } else {
-                return Promise.reject(new Error('Post has no id'))
-            }
-        }, // Optional, type: (data: any, response: ReHttpResponse) => Promise<Post>, default: undefined
-        transformRequest: async (res: ReHttpRequest) => {
-            const token = await SomeAsyncStorageOrApiOrWhatever().token
-            return {
-                ...res,
-                params: {
-                    foo: 'bar',
-                },
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }
-        }, // Optional, type: (data: ReHttpRequest) => Promise<ReHttpRequest>, default: undefined
-        lazy: true, // Optional, type: boolean
-    }
-    return (
-        <ReHttpProvider {...options}>
-            <Main />
-        </ReHttpProvider>
-    )
-}
-```
-
-##### Need to use it outside of react context (like redux thunk etc.) and still use context values? No Problem!
-
-#### `reHttpInstance`
-
-```tsx
-import React from 'react'
-
-import { reHttpInstance } from 'rehttp'
-
-reHttpInstance({
-  url: 'https://jsonplaceholder.typicode.com'
-}).then(res => {
-  console.log('Response from ReHttp', res)
-}) // option lazy: true will have no effect here
-
-const MyComponent: React.FC = () => {
-    return <div>Hello World!</div>
-}
-```
-
+---
 
 ## License
 
-MIT © [harryy2510](https://github.com/harryy2510)
+MIT
